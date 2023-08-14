@@ -21,6 +21,9 @@ Scala
 * [[H](https://www.scala-lang.org/)][[D](https://docs.scala-lang.org/)] Scala
   * [[Book](https://docs.scala-lang.org/scala3/book/introduction.html)]
 * [[H](https://www.scala-sbt.org/)] Simple Build Tool (sbt)
+* [[H](http://www.scalanlp.org/)][[G](https://github.com/scalanlp)] ScalaNLP
+  * [[G](https://github.com/scalanlp/breeze)] Breeze
+	  * [[G](https://github.com/scalanlp/breeze/wiki/Linear-Algebra-Cheat-Sheet)] Linear Algebra Cheat Sheet
 
 Python
 * [[D](https://www.dask.org)] dask
@@ -46,6 +49,7 @@ Apache Spark
 
 Big Data
 * Leskovec, Jure; Anand Rajaraman; & Jeff Ullman. _Mining of Massive Datasets_. [Home]( http://www.mmds.org).
+* Linn, Jimmy & Chris Dyer. (2010). _Data-Intensive Text Processing with MapReduce_. [Home](https://lintool.github.io/MapReduceAlgorithms/).
 
 Scala
 * Alexander, Alvin. (2021). _Scala Cookbook: Recipes for Object-Oriented and Functional Programming_. 2nd Ed. O'Reilly. [GitHub](https://github.com/alvinj/ScalaCookbook2Examples).
