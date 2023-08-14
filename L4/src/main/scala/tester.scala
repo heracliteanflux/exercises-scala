@@ -1,6 +1,7 @@
-object Tester1 extends App {
-   //Note that by extending App, we are making this the entry point to all the code
-   //any loose statements here (not in functions) are going to be executed when the code starts
+object Tester extends App {
+   // Note that by extending App, we are making this the entry point to all the code
+   // any loose statements here (not in functions) are going to be executed when the code starts
+
    println("Starting Tests")
 
    println("Q1\nCalling q1_sorted_tuple(4,2,1)...")

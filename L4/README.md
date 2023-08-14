@@ -1,4 +1,4 @@
-Shell
+Linux shell
 
 1
 
@@ -32,6 +32,8 @@ sbt
 [info] started sbt server
 ```
 
+sbt shell
+
 4
 
 ```sbt
@@ -44,7 +46,7 @@ sbt:l4> compile
 
 ```sbt
 sbt:l4> run
-[info] running Tester1
+[info] running Tester
 Starting Tests
 Q1
 Calling q1_sorted_tuple(4,2,1)...
