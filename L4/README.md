@@ -1,4 +1,6 @@
-Linux shell
+### Scala and sbt
+
+#### Linux shell
 
 1
 
@@ -32,7 +34,7 @@ sbt
 [info] started sbt server
 ```
 
-sbt shell
+#### sbt shell
 
 4
 
