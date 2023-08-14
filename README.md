@@ -1,6 +1,13 @@
 # Big data programming in Scala
 Exercises in the Scala programming language with an emphasis on big data programming and applications in Apache Hadoop and Apache Spark.
 
+### Table of Contents
+1. [Resources](#resources)
+2. [Texts](#texts)
+3. [Terms](#terms)
+
+---
+
 ### Resources
 
 [[H](https://hadoop.apache.org/)][[W](https://en.wikipedia.org/wiki/Apache_Hadoop)] Apache Hadoop
@@ -16,6 +23,16 @@ Scala
 Python
 * [[D](https://mrjob.readthedocs.io/en/latest/index.html)] mrjob
 * [[D](https://docs.pytest.org/en/latest/)] pytest
+
+---
+
+### Texts
+
+* Alexander, Alvin. (2021). _Scala Cookbook: Recipes for Object-Oriented and Functional Programming_. 2nd Ed. O'Reilly. [GitHub](https://github.com/alvinj/ScalaCookbook2Examples).
+* Odersky, Martin; Lex Spoon; & Bill Venners. _Programming in Scala_. 3rd. Ed. Artima. [Home](https://booksites.artima.com/programming_in_scala_3ed).
+* Wampler, Dean. (2021). _Programming Scala: Scalability = Functional Programming + Objects_. 3rd Ed. O'Reilly. [Home](https://deanwampler.github.io/books/programmingscala.html). [GitHub](https://github.com/deanwampler/programming-scala-book-code-examples).
+
+---
 
 ### Terms
 
