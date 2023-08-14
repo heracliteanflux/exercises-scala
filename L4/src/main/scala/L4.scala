@@ -1,9 +1,22 @@
 object Lab {
 
+   // input  : 3 integers x,y,z
+	 // return : a tuple of the integers in sorted order
+	 // for example, if the input is 2, 1, 4, the output should be (1, 2, 4)
+	 // Requirements
+	 //   do not use lists, vectors, or any other collections
+	 //   do not use loops or recursion either
+	 //   do not use the return keyword
+	 //   you can use if statements and you can define helper functions (anonymous functions or other non-recursive functions)
    def q1_sorted_tuple (x: Int, y: Int, z:Int) = {
       if (x<y) if (y<z) (x,y,z) else if (x<z) (x,z,y) else (z,x,y) else if (x<z) (y,x,z) else if (y<z) (y,z,x) else (z,y,x)
    }
-      
+  
+   // print : a greeting message using the name argument that tells you what the age will be in one year
+	 // for instance, `q2_string_practice(”World”, 23)` should print "Hello, World, next year you will be 24."
+	 // Requirements
+	 //   the body of the function must be 1 line (no semicolons) and must use string interpolation
+	 // note that the return type of this function is `Unit` which means that it is actually a procedure and does not return anything
    def q2_string_practice (name: String, age: Int): Unit = {
       println(s"Hello, $name, next year you will be ${age + 1}.")
    }
