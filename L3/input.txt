@@ -1,0 +1,5 @@
+DESTINATION ORIGIN NUMBER
+US France 12345
+US Germany 23456
+France Germany 34567
+Germany France 45678
