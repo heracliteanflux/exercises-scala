@@ -1,23 +1,25 @@
 # Big data programming in Scala
+
 Exercises in the Scala programming language with an emphasis on big data programming and applications in Apache Hadoop and Apache Spark.
 
-### Table of Contents
+## Table of Contents
+
 1. [Resources](#resources)
 2. [Texts](#texts)
 3. [Terms](#terms)
 
----
-
-### Resources
+## Resources
 
 [[H](https://hadoop.apache.org/)][[W](https://en.wikipedia.org/wiki/Apache_Hadoop)] Apache Hadoop
+* [[D](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html)] HDFS shell
 * https://www.databricks.com/glossary/hadoop-distributed-file-system-hdfs
 
 [[H](https://spark.apache.org/)][[W](https://en.wikipedia.org/wiki/Apache_Spark)] Apache Spark
 
 Scala
 * [[H](https://get-coursier.io/)] Coursier
-* [[H](https://www.scala-lang.org/)] Scala
+* [[H](https://www.scala-lang.org/)][[D](https://docs.scala-lang.org/)] Scala
+  * [[Book](https://docs.scala-lang.org/scala3/book/introduction.html)]
 * [[H](https://www.scala-sbt.org/)] Simple Build Tool (sbt)
 
 Python
@@ -25,9 +27,7 @@ Python
 * [[D](https://mrjob.readthedocs.io/en/latest/index.html)] mrjob
 * [[D](https://docs.pytest.org/en/latest/)] pytest
 
----
-
-### Texts
+## Texts
 
 Apache Hadoop
 * Sammer, Eric. (2012). _Hadoop Operations: A Guide for Developers and Administrators_. O'Reilly. [Home](http://www.hadoopbook.com). [GitHub](https://github.com/tomwhite/hadoop-book/).
@@ -49,12 +49,14 @@ Big Data
 
 Scala
 * Alexander, Alvin. (2021). _Scala Cookbook: Recipes for Object-Oriented and Functional Programming_. 2nd Ed. O'Reilly. [GitHub](https://github.com/alvinj/ScalaCookbook2Examples).
+* Chiusano, Paul & Runar Bjarnason. (2014). _Functional Programming in Scala_. [Manning](https://www.manning.com/books/functional-programming-in-scala).
+* Odersky, Martin; Lex Spoon; & Bill Venners. (2023). _Advanced Programming in Scala_. 5th Ed. [Artima](https://www.artima.com/shop/advanced_programming_in_scala_5ed).
+* Odersky, Martin; Lex Spoon; Bill Venners; & Frank Sommers. (2021). _Programming in Scala_. 5th Ed. [Artima](https://booksites.artima.com/shop/programming_in_scala_5ed).
 * Odersky, Martin; Lex Spoon; & Bill Venners. _Programming in Scala_. 3rd. Ed. Artima. [Home](https://booksites.artima.com/programming_in_scala_3ed).
+* Phillips, Andrew & Nermin Šerifovic. (2014). _Scala Puzzlers_. [Artima](https://booksites.artima.com/shop/scala_puzzlers).
 * Wampler, Dean. (2021). _Programming Scala: Scalability = Functional Programming + Objects_. 3rd Ed. O'Reilly. [Home](https://deanwampler.github.io/books/programmingscala.html). [GitHub](https://github.com/deanwampler/programming-scala-book-code-examples).
 
----
-
-### Terms
+## Terms
 
 * [[W](https://en.wikipedia.org/wiki/Anamorphism)] Anamorphism
 * [[W](https://en.wikipedia.org/wiki/Apache_Hadoop)] Apache Hadoop
@@ -78,3 +80,7 @@ Scala
 * [[W](https://en.wikipedia.org/wiki/Programming_model)] Programming Model
 * [[W](https://en.wikipedia.org/wiki/Reduction_operator)] Reduce
 * [[W](https://en.wikipedia.org/wiki/Shard_(database_architecture))] Shard
+
+## Acknowledgements
+
+[[H](https://www.cse.psu.edu/~duk17/)] Dan Kifer. CMPSC/DS 410 Programming Models for Big Data. The Pennsylvania State University.
