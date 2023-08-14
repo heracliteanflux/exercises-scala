@@ -58,3 +58,22 @@ object Tester extends App {
    val result12_0=Lab.q12_tribonacci(0,0,1,12)
    println(s"Answer:\n149\nResult:\n$result12_0")
 }
+
+// object Tester extends App {
+//    val result1: (Int, Int, Int) = Lab.q1_sorted_tuple(4,2,1)
+//    val result2:  Unit  = Lab.q2_string_practice("world", 23)
+//    val result3a: Int = Lab.q3_indexed_sum(List(4,1,2))
+//    val result3b: Int = Lab.q3_indexed_sum(Vector(4,1,2))
+//    val result4a: Float = Lab.q4_indexed_sum(List(1f, 2f, 3f))
+//    val result4b: Float = Lab.q4_indexed_sum(Vector(1f, 2f, 3f))
+//    val result5:  Int = Lab.q5_application(1){(x,y) => x+y}
+//    val result6a: Seq[Int] = Lab.q6_cubed_no2(List(4,5,6))
+//    val result6b: Seq[Int] = Lab.q6_cubed_no2(Vector(4,5,6))
+//    val result7:  Vector[Int] = Lab.q7_cubed(5)
+//    val result8:  Vector[Int] = Lab.q8_cubed(5)
+//    val result9a: Int = Lab.q9_find(List(3,4,5), 3)
+//    val result9b: Int = Lab.q9_find(Vector(3,4,5), 3)
+//    val result10: Int = Lab.q10_find(List(2,3,4)){x => x%2 == 0}
+//    val result11: Int = Lab.q11_tribonacci(1,2,3,4)
+//    val result12: Int = Lab.q12_tribonacci(1,2,3,4)
+// }
