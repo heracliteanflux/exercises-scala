@@ -21,6 +21,7 @@ Scala
 * [[H](https://www.scala-sbt.org/)] Simple Build Tool (sbt)
 
 Python
+* [[D](https://www.dask.org)] dask
 * [[D](https://mrjob.readthedocs.io/en/latest/index.html)] mrjob
 * [[D](https://docs.pytest.org/en/latest/)] pytest
 
@@ -28,6 +29,25 @@ Python
 
 ### Texts
 
+Apache Hadoop
+* Sammer, Eric. (2012). _Hadoop Operations: A Guide for Developers and Administrators_. O'Reilly. [Home](http://www.hadoopbook.com). [GitHub](https://github.com/tomwhite/hadoop-book/).
+* White, Tom. (2015). _Hadoop: The Definitive Guide: Storage and Analysis at Internet Scale_. 4th Ed. O'Reilly.
+
+Apache Spark
+* Chambers, Bill & Matei Zaharia. (2018). _Spark The Definitive Guide: Big Data Processing Made Simple_. O'Reilly. [GitHub](https://github.com/databricks/Spark-The-Definitive-Guide).
+* Damji et al. (2020). _Learning Spark: Lightning-Fast Data Analytics_. 2nd Ed. O'Reilly. [GitHub](https://github.com/databricks/LearningSparkV2).
+* Karau, Holden & Rachel Warren. (2017). _High Performance Spark: Best Practices for Scaling & Optimizing Apache Spark_. O'Reilly. [GitHub](https://github.com/high-performance-spark/high-performance-spark-examples).
+* Maas, Gerard & Francois Garillot. (2019). _Stream Processing with Apache Spark: Best Practices for Scaling and Optimizing Apache Spark_. O'Reilly. [GitHub](https://github.com/stream-processing-with-spark).
+* Parsian, Mahmoud. (2022). _Data Algorithms with Spark: Recipes and Design Patterns for Scaling Up Using PySpark_. O'Reilly. [GitHub](https://github.com/mahmoudparsian/data-algorithms-with-spark).
+* Perrin, Jean-Georges. (2020). _Spark in Action: With examples in Java, Python, and Scala_. 2nd Ed. Manning.
+* Polak, Adi. (2023). _Machine Learning with Spark: Designing Distributed ML Platforms with PyTorch, TensorFlow, and MLLib_. O'Reilly.
+* Ryza et al. (2017). _Advanced Analytics with Spark: Patterns for Learning from Data at Scale_. 2nd Ed. O'Reilly. [GitHub](https://github.com/sryza/aas).
+* Tandon et al. (2022). _Advanced Analytics with PySpark: Patterns for Learning from Data at Scale Using Python and Spark_. O'Reilly.
+
+Big Data
+* Leskovec, Jure; Anand Rajaraman; & Jeff Ullman. _Mining of Massive Datasets_. [Home]( http://www.mmds.org).
+
+Scala
 * Alexander, Alvin. (2021). _Scala Cookbook: Recipes for Object-Oriented and Functional Programming_. 2nd Ed. O'Reilly. [GitHub](https://github.com/alvinj/ScalaCookbook2Examples).
 * Odersky, Martin; Lex Spoon; & Bill Venners. _Programming in Scala_. 3rd. Ed. Artima. [Home](https://booksites.artima.com/programming_in_scala_3ed).
 * Wampler, Dean. (2021). _Programming Scala: Scalability = Functional Programming + Objects_. 3rd Ed. O'Reilly. [Home](https://deanwampler.github.io/books/programmingscala.html). [GitHub](https://github.com/deanwampler/programming-scala-book-code-examples).
