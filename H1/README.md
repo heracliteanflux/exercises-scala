@@ -1,5 +1,11 @@
-1. Download the file `f1.txt` onto lxlabs.
+Download the file `f1.txt` onto lxlabs.
 
-2. Move the file to hadoop-gateway.
+![](img/0.png)
 
-3. Move the file to hdfs.
+Move the file to hadoop-gateway.
+
+![](img/1.png)
+
+Move the file to hdfs.
+
+![](img/2.png)
