@@ -1,0 +1,6 @@
+DEST_COUNTRY_NAME,ORIGIN_COUNTRY_NAME,count
+US,Ireland,4
+US,Germany,2
+Ireland,US,7
+France,US,3
+US,France,1
