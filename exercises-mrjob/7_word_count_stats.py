@@ -19,11 +19,16 @@ class WordCountStats (MRJob):
 			self.stats[first_letter + '_'] = self.stats.get(first_letter + '_', 0) + 1
 
 	def mapper_final (self):
+
 		if self.words: # if len(self.words) > 0
 			for w in self.words:
 				yield w, self.words[w]
 			self.words = {}
-		self.stats = {}
+		
+		if self.stats: # if len(self.stats) > 0
+			for stat in self.stats:
+				yield stat, self.stats[stat]
+			self.stats = {}
 
 	def reducer (self, key, values):
 		yield key, sum(values)

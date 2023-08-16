@@ -371,3 +371,6 @@ worker node failure is determined by a lack of heartbeat messages and the worker
 * don't let data stored by the mapper get too large, otherwise it will not fit in memory
 * avoid small data solutions
 * flush the cache: output key-value pairs when the cache gets too big, and then flush the cache
+* reduces network traffic
+* increases the speed of the shuffle-and-sort phase because there's less data to shuffle and sort
+* helps to avoid overloading a reducer with too many messages
