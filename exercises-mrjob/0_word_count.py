@@ -7,9 +7,6 @@ class WordCount (MRJob):
 		for word in words:
 			yield word, 1
 
-		# for word in line.split():
-		# 	yield word, 1
-
 	def reducer (self, key, values):
 		yield key, sum(values)
 
