@@ -219,7 +219,22 @@ PMDK:    false
  mvn package -Pdist,native -DskipTests -Dtar -Dmaven.javadoc.skip=true
 ```
 
-TO REVIEW
+### HDFS commands
+
+[`hdfs dfs`](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#dfs)
+* `hdfs dfs -ls /home/foo` list the files in a directory
+* `hdfs dfs -cat /home/foo/part-0001` view the contents of a file
+* `hdfs dfs -get source destination` download from hdfs to local
+* `hdfs dfs -put source destination` upload from local to hdfs
+* https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html
+
+[`hdfs dfsadmin`](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#dfsadmin)
+* `hdfs dfsadmin -report`
+
+[`hdfs fsck`](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#fsck) file system check
+* `hdfs fsck /`
+
+### TO REVIEW
 
 Configuration
 * `$HADOOP_HOME/etc/hadoop/hadoop-env.sh`
@@ -243,7 +258,3 @@ Startup
 * `yarn --daemon start proxyserver`
 * `mapred --daemon start historyserver`
 * `jps` Lists the instrumented Java Virtual Machines (JVMs) on the target system. This command is experimental and unsupported.
-
-Monitoring
-* `hdfs dfsadmin -report`
-* `hdfs fsck /`

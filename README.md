@@ -128,12 +128,50 @@ Limitations of HDFS
 	* 6,400 1-MB files: 6,400 metadata entries...
 * better for jobs that read the entire file than for jobs that require random access
 
-### HDFS commands
+[MAPREDUCE]
 
-`hdfs dfs -ls /home/foo` list the files in a directory
+parallel read: multiple mappers, single reducer
+* problem: the data do not fit on one machine
+* multiple mapper nodes read separate file shards in parallel
+* each mapper node sends many messages to the reducer node: key "word", value "1"
+* the reducer node interprets messages to mean "increment the count of the word by one"
+* the reducer node stores the dictionary
 
-`hdfs dfs -cat /home/foo/part-0001` view the contents of a file
+```
+mapper node j:
+  read file shards on mapper node j
+	for each line:
+	  words = line.split()
+		for word in words:
+		  send message (word, 1) to the reducer node
 
-`hdfs dfs -get source destination` download from hdfs to local
+reducer node:
+  receive messages
+	aggregate words
+	increment words counts
+```
 
-`hdfs dfs -put source destination` upload from local to hdfs
+parallel read, parallel aggregation: multiple mappers, multiple reducers
+* problem: the words output does not fit on one machine
+* multiple reducers: each reducer is associated with a set of words
+* for example, 6 reducers:
+  * reducer 0 gets words where hash(words) % 6 == 0
+	* reducer 1 gets words where hash(words) % 6 == 1
+* reducer i produces output shard i
+
+```
+mapper node j:
+  read file shards on mapper node j
+	for each line:
+	  words = line.split()
+		for word in words:
+		  determine the appropriate reducer node
+		  send message (word, 1) to the appropriate reducer node
+
+reducer node i:
+  receive messages
+	aggregate words
+	increment words counts
+	save the output as file shard i to HDFS as a file shard
+```
+
