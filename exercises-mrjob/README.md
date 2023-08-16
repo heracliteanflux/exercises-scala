@@ -1,6 +1,8 @@
-# Exercises
+# mrjob
 
-## `word_count.py`
+## Exercises
+
+### `word_count.py`
 
 ```python
 # https://mrjob.readthedocs.io/en/latest/guides/quickstart.html
@@ -30,7 +32,7 @@ python word_count.py war_and_peace.txt
 "chars"	3163475
 ```
 
-## `most_common_word.py`
+### `most_common_word.py`
 
 ```python
 from mrjob.job  import MRJob
@@ -84,7 +86,7 @@ python most_common_word.py war_and_peace.txt
 34532	"the"
 ```
 
-## `word_size.py`
+### `word_size.py`
 
 ```python
 from mrjob.job import MRJob
@@ -133,7 +135,7 @@ python word_size.py war_and_peace.txt
 10	12928
 ```
 
-## `word_alpha.py`
+### `word_alpha.py`
 
 ```python
 from mrjob.job import MRJob
@@ -181,3 +183,10 @@ python word_alpha.py war_and_peace.txt
 1	"z"
 10	"youthfully"
 ```
+
+## Notes
+
+mrjob
+* a convenient Python interface to Hadoop's Java code
+* slower that Java: uses Hadoop streaming interface to communicate with Java code via stdin and stdout
+* less control of useful components such as the partitioner

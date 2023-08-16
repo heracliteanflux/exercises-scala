@@ -175,3 +175,26 @@ reducer node i:
 	save the output as file shard i to HDFS as a file shard
 ```
 
+the mapper generates key-value messages from each line
+
+the partitioner decides which reducer receives each key
+
+the reducer performs an aggregation with the messages received
+
+the sorter determines the order in which messages are received
+
+the combiner suggests an optimization
+
+[MAPPER]
+
+input: key-value pair
+* key = line number, value = line
+* key = null, value = line
+
+output: key-value pairs
+
+Hadoop
+* finds mapper nodes that have file shards or can get them quickly
+* each mapper node reads its file shards
+* for every line, it calls the mapper function on it and saves the results to local disk (not HDFS)
+* messages for reducer 1 are saved in one file, sorted by keys assigned to that reducer; messages for reducer 2 are saved in another file, sorted by keys assigned to that reducer; etc.
