@@ -7,6 +7,8 @@ Exercises in the Scala programming language with an emphasis on big data program
 1. [Resources](#resources)
 2. [Texts](#texts)
 3. [Terms](#terms)
+4. [Acknowledgements](#acknowledgements)
+5. [Notes](#notes)
 
 ## Resources
 
@@ -51,6 +53,9 @@ Big Data
 * Leskovec, Jure; Anand Rajaraman; & Jeff Ullman. _Mining of Massive Datasets_. [Home]( http://www.mmds.org).
 * Linn, Jimmy & Chris Dyer. (2010). _Data-Intensive Text Processing with MapReduce_. [Home](https://lintool.github.io/MapReduceAlgorithms/).
 
+MapReduce
+* [[P](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)] Jeffrey Dean and Sanjay Ghemawat. "MapReduce: Simplified Data Processing on Large Clusters". Communications of the ACM January 2008, Vol 52. No.1.
+
 Scala
 * Alexander, Alvin. (2021). _Scala Cookbook: Recipes for Object-Oriented and Functional Programming_. 2nd Ed. O'Reilly. [GitHub](https://github.com/alvinj/ScalaCookbook2Examples).
 * Chiusano, Paul & Runar Bjarnason. (2014). _Functional Programming in Scala_. [Manning](https://www.manning.com/books/functional-programming-in-scala).
@@ -88,3 +93,47 @@ Scala
 ## Acknowledgements
 
 [[H](https://www.cse.psu.edu/~duk17/)] Dan Kifer. CMPSC/DS 410 Programming Models for Big Data. The Pennsylvania State University.
+
+## Notes
+
+[FILE SHARD]
+
+A large file is split up into pieces called blocks, chunks, or shards (e.g., 64 MB chunk). Shards are replicated and then distributed to different physical machines (3 by default).
+
+[DATA NODE]
+
+A machine that hosts a file shard is called a data node.
+
+[NAME NODE]
+
+The name node is responsible for
+* tracking file shards
+  * the name node stores metadata (file name, file shard name, number of replicas, storage location of shards) in memory
+	* which data nodes store which shards?
+	* if a shard is under-replicated, the name node searches for other machines to replicate on
+* detecting and managing machine failure
+  * if a data node does not send a heartbeat message, then the name node assumes that the data node has failed
+* reading files at the level of the application
+
+[CLIENT]
+
+The application that needs the data is called the client.
+
+The client contacts the name node in order to discover the location of file shards, and then contacts the appropriate data nodes to retrieve them.
+
+Limitations of HDFS
+* slower than a native file system due to network communication
+* better for a few large files than for many small files
+  * one 6.4-GB file is 100 64 MB shards: 100 metadata entries are stored in the main memory of the name node
+	* 6,400 1-MB files: 6,400 metadata entries...
+* better for jobs that read the entire file than for jobs that require random access
+
+### HDFS commands
+
+`hdfs dfs -ls /home/foo` list the files in a directory
+
+`hdfs dfs -cat /home/foo/part-0001` view the contents of a file
+
+`hdfs dfs -get source destination` download from hdfs to local
+
+`hdfs dfs -put source destination` upload from local to hdfs

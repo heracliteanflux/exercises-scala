@@ -22,7 +22,6 @@ hdfs dfs -stat "blocksize:%o repication:%r owner:%u mdate:%y" hdfs_lab1b/war_and
 
 Configuration
 * `echo "HADOOP_HOME=\"/opt/homebrew/Cellar/hadoop/3.3.3/libexec\"" >> ~/.zshrc`
-
 * `$HADOOP_HOME/etc/hadoop/hadoop-env.sh`
 * `$HADOOP_HOME/etc/hadoop/core-site.xml`
 * `$HADOOP_HOME/etc/hadoop/hdfs-site.xml`
