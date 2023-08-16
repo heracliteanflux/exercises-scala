@@ -1,6 +1,4 @@
-# Setting up a single node cluster on macOS
-
-https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html
+# [Setting up a single node cluster on macOS](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html)
 
 1
 
@@ -20,7 +18,22 @@ export HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop"
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/share/hadoop/hdf"
 ```
 
-3
+3 - Install Java if you haven't already done so.
+
+```
+java -version
+```
+or
+```
+java --version
+```
+```
+java version "18.0.2.1" 2022-08-18
+Java(TM) SE Runtime Environment (build 18.0.2.1+1-1)
+Java HotSpot(TM) 64-Bit Server VM (build 18.0.2.1+1-1, mixed mode, sharing)
+```
+
+4
 
 ```
 hadoop version
@@ -47,7 +60,7 @@ From source with checksum 5652179ad55f76cb287d9c633bb53bbd
 This command was run using /opt/homebrew/Cellar/hadoop/3.3.6/libexec/share/hadoop/common/hadoop-common-3.3.6.jar
 ```
 
-[Standalone Op](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html)
+## [Standalone Op](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Standalone_Operation)
 
 1
 
@@ -100,7 +113,7 @@ output
 1 directory, 2 files
 ```
 
-[Standalone Op](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html)
+## [Pseudo-Distributed Op](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Pseudo-Distributed_Operation)
 
 1
 
@@ -130,13 +143,43 @@ vim $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 </configuration>
 ```
 
-3 - Configure ssh
+3 - Configure ssh if you haven't already done so.
+
+```
+vim ~/.ssh/config
+```
+```
+Host m1
+  Hostname       localhost
+  IdentityFile   ~/.ssh/id_ed25519_m1
+  User           df
+
+Host *
+  AddKeysToAgent yes
+  IdentityAgent  "~/Library/Group Containers/.../agent.sock"
+  IdentitiesOnly yes
+  LogLevel       INFO
+  Port           22
+  UseKeychain    yes
+```
+
+4
 
 ```
 ssh localhost
 ```
+```
+(df@localhost) Password:
+Last login: Wed Aug 16 02:15:25 2023
+```
+```
+exit
+```
+```
+Connection to localhost closed.
+```
 
-4
+5 - HDFS example
 
 ```
 hdfs namenode -format        &&
@@ -194,7 +237,7 @@ hdfs --daemon stop namenode &&
 hdfs --daemon stop datanode
 ```
 
-### `WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable`
+## `WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable`
 
 * https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/NativeLibraries.html
 * https://cwiki.apache.org/confluence/display/HADOOP/Develop+on+Apple+Silicon+%28M1%29+macOS
@@ -219,7 +262,7 @@ PMDK:    false
  mvn package -Pdist,native -DskipTests -Dtar -Dmaven.javadoc.skip=true
 ```
 
-### HDFS commands
+## HDFS commands
 
 [`hdfs dfs`](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#dfs)
 * `hdfs dfs -ls /home/foo` list the files in a directory
@@ -234,7 +277,7 @@ PMDK:    false
 [`hdfs fsck`](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#fsck) file system check
 * `hdfs fsck /`
 
-### TO REVIEW
+## to review
 
 Configuration
 * `$HADOOP_HOME/etc/hadoop/hadoop-env.sh`
