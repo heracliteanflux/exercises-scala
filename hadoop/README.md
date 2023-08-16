@@ -38,15 +38,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 18.0.2.1+1-1, mixed mode, sharing)
 ```
 hadoop version
 ```
-```
-Hadoop 3.3.6
-Source code repository https://github.com/apache/hadoop.git -r 1be78238728da9266a4f88195058f08fd012bf9c
-Compiled by ubuntu on 2023-06-18T08:22Z
-Compiled on platform linux-x86_64
-Compiled with protoc 3.7.1
-From source with checksum 5652179ad55f76cb287d9c633bb53bbd
-This command was run using /opt/homebrew/Cellar/hadoop/3.3.6/libexec/share/hadoop/common/hadoop-common-3.3.6.jar
-```
+or
 ```
 hdfs version
 ```
@@ -58,6 +50,25 @@ Compiled on platform linux-x86_64
 Compiled with protoc 3.7.1
 From source with checksum 5652179ad55f76cb287d9c633bb53bbd
 This command was run using /opt/homebrew/Cellar/hadoop/3.3.6/libexec/share/hadoop/common/hadoop-common-3.3.6.jar
+```
+
+5
+
+```
+brew install maven
+```
+
+6
+
+```
+mvn --version
+```
+```
+Apache Maven 3.9.4 (dfbb324ad4a7c8fb0bf182e6d91b0ae20e3d2dd9)
+Maven home: /opt/homebrew/Cellar/maven/3.9.4/libexec
+Java version: 18.0.2.1, vendor: Oracle Corporation, runtime: /Library/Java/JavaVirtualMachines/jdk-18.0.2.1.jdk/Contents/Home
+Default locale: en_US, platform encoding: UTF-8
+OS name: "mac os x", version: "13.5", arch: "aarch64", family: "mac"
 ```
 
 ## [Standalone Op](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Standalone_Operation)
