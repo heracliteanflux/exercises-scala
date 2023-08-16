@@ -33,7 +33,7 @@ Run a mapreduce job on the output of `word_count.py` via mrjob's steps API.
 from mrjob.job  import MRJob
 from mrjob.step import MRStep
 
-class WordTotal (MRJob):
+class WordCountStats (MRJob):
 
 	def mapper_word_count (self, key, line):
 		words = line.split()
@@ -64,7 +64,7 @@ class WordTotal (MRJob):
 		]
 
 if __name__ == '__main__':
-	WordTotal.run()
+	WordCountStats.run()
 ```
 
 This code is inefficient because the second mapreduce job (or step) is an extra transfer of data.
@@ -72,7 +72,7 @@ This code is inefficient because the second mapreduce job (or step) is an extra 
 #### second attempt
 
 ```python
-from mrjob.job  import MRJob
+from mrjob.job import MRJob
 
 class WordCountStats (MRJob):
 
@@ -107,6 +107,58 @@ int getPartition (Key key, Value value, int numPart) {
 }
 ```
 
-The statistics go to the first partition and the word counts are distributed to the remaining partitions.
+The statistics go to the first partition and the word counts are distributed to the remaining partitions. But this code is still inefficient.
 
-### number of words starting with letter
+### letter count `letter_count.py`
+
+```python
+from mrjob.job import MRJob
+
+class LetterCount (MRJob):
+
+  def mapper (self, key, line):
+		for symbol in line:
+			if isletter (symbol):
+				yield symbol, 1
+
+	def reducer (self, key, values):
+		yield key, sum(values)
+
+if __name__ == '__main__':
+	LetterCount.run()
+```
+
+What is the size of the data being shipped across the network from mappers to reducers?
+
+L input characters
+
+B size of a character
+
+N size of an integer
+
+L(B+N) bytes are being shipped across the network from mappers to reducers, which could be larger than the original input. It isn't necessary to wait until the reducer to add values: messages with the same key can be combined by adding their values.
+
+### setup and teardown
+
+```python
+from mrjob.job import MRJob
+
+class WordCount (MRJob):
+
+	def mapper_init (self):
+		self.cache = {}
+
+	def mapper (self, key, line):
+		limit = 100
+		for word in line:
+			self.cache[word] += 1
+			if (len(cache) > limit):
+				for word in cache:
+			    yield word, self.cache[word]
+
+	def reducer (self, key, values):
+		yield key, sum(values)
+
+if __name__ == '__main__':
+	WordCount.run()
+```

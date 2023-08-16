@@ -1,7 +1,7 @@
 from mrjob.job  import MRJob
 from mrjob.step import MRStep
 
-class WordTotal (MRJob):
+class WordCountStats (MRJob):
 
 	def mapper_word_count (self, key, line):
 		words = line.split()
@@ -32,4 +32,4 @@ class WordTotal (MRJob):
 		]
 
 if __name__ == '__main__':
-	WordTotal.run()
+	WordCountStats.run()
