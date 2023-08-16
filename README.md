@@ -145,6 +145,21 @@ Limitations of HDFS
 
 [MAPREDUCE]
 
+* Mapper
+  * the mapper generates key-value messages from each line
+	* can be written in Java instead of Python mrjob via Hadoop streaming
+* Partitioner
+  * the partitioner decides which reducer receives each key
+	* write the partitioner in Java
+* Reducer
+  * the reducer performs an aggregation with the messages received
+	* can be written in Java instead of Python mrjob via Hadoop streaming
+* Sorter
+  * the sorter determines the order in which messages are received
+	* write the sorter in Java
+* Combiner
+  * the combiner suggests an optimization
+
 parallel read: multiple mappers, single reducer
 * problem: the data do not fit on one machine
 * multiple mapper nodes read separate file shards in parallel
@@ -189,16 +204,6 @@ reducer node i:
 	increment words counts
 	save the output as file shard i to HDFS as a file shard
 ```
-
-the mapper generates key-value messages from each line
-
-the partitioner decides which reducer receives each key
-
-the reducer performs an aggregation with the messages received
-
-the sorter determines the order in which messages are received
-
-the combiner suggests an optimization
 
 [MAPPER]
 
@@ -344,3 +349,17 @@ components
 * resource manager - the scheduler maintains a queue of waiting jobs and the applications manager accepts new jobs and determines its first container
 
 [FAULT TOLERANCE]
+
+worker nodes (mappers and reducers) send heartbeat messages
+* indirectly via key-value messages
+* directly via hearbeat messages (mrjob's `.set_status()`)
+
+worker node failure is determined by a lack of heartbeat messages and the worker node's job is reallocated to another worker node
+
+[mrjob]
+
+* Hadoop's native language is Java
+* writing jobs in Java provides type safety, and more control over such things as the partitioner
+* mrjob is a convenient Python interface to Hadoop's Java code
+* using mrjob is slower than using Java: mrjob uses Hadoop streaming interface to communicate with the Java code via stdin and stdout
+* mrjob provides less control over some useful components like the partitioner
