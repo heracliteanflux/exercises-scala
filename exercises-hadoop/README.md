@@ -248,6 +248,202 @@ hdfs --daemon stop namenode &&
 hdfs --daemon stop datanode
 ```
 
+## [MapReduce tutorial](https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html)
+
+1
+
+```java
+import java.io.IOException;
+import java.lang.Object;
+import java.util.StringTokenizer;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class WordCount extends Object {
+
+	// mapper
+	public static class TokenizerMapper
+	  extends Mapper<Object, Text, Text, IntWritable>
+	{
+		private final static IntWritable  one = new IntWritable(1);
+		private                     Text word = new Text();
+
+		public void map (Object key, Text value, Context context)
+		  throws IOException, InterruptedException
+		{
+			StringTokenizer itr = new StringTokenizer(value.toString());
+			while (itr.hasMoreTokens()) {
+				word.set(itr.nextToken());
+				context.write(word, one);
+			}
+		}
+	}
+
+	// reducer
+	public static class IntSumReducer
+	  extends Reducer<Text, IntWritable, Text, IntWritable>
+	{
+    private IntWritable result = new IntWritable();
+
+		public void reduce (Text key, Iterable<IntWritable> values, Context context)
+		  throws IOException, InterruptedException
+		{
+			int sum = 0;
+			for (IntWritable val : values) {
+				sum += val.get();
+			}
+			result.set(sum);
+			context.write(key, result);
+		}
+	}
+
+	public static void main (String[] args) {
+		try {
+			Configuration conf = new Configuration();
+			Job job = Job.getInstance(conf, "word count");
+			job.setJarByClass(WordCount.class);
+			job.setMapperClass(TokenizerMapper.class);
+			job.setCombinerClass(IntSumReducer.class);
+			job.setReducerClass(IntSumReducer.class);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(IntWritable.class);
+			FileInputFormat.addInputPath(job, new Path(args[0]));
+			FileOutputFormat.setOutputPath(job, new Path(args[1]));
+			System.exit(job.waitForCompletion(true) ? 0 : 1);
+		}
+		catch (IOException e) {
+      e.printStackTrace();
+		}
+		catch (InterruptedException e) {
+      e.printStackTrace();
+		}
+		catch (ClassNotFoundException e) {
+      e.printStackTrace();
+		}
+	}
+}
+```
+
+2
+
+```
+tree
+```
+```
+.
+└── WordCount.java
+
+1 directory, 1 file
+```
+
+3
+
+```
+hadoop com.sun.tools.javac.Main WordCount.java
+```
+```
+tree
+```
+```
+.
+├── WordCount$IntSumReducer.class
+├── WordCount$TokenizerMapper.class
+├── WordCount.class
+└── WordCount.java
+
+1 directory, 4 files
+```
+
+4
+
+```
+jar cf wc.jar WordCount*.class
+```
+```
+.
+├── WordCount$IntSumReducer.class
+├── WordCount$TokenizerMapper.class
+├── WordCount.class
+├── WordCount.java
+└── wc.jar
+
+1 directory, 5 files
+```
+
+5
+
+```
+vim file01
+```
+```
+Hello World Bye World
+```
+```
+vim file01
+```
+```
+Hello Hadoop Goodbye Hadoop
+```
+
+6
+
+```
+ hdfs dfs -mkdir -p wordcount/input &&
+ hdfs dfs -ls /user/df/wordcount
+```
+```
+Found 1 items
+drwxr-xr-x   - df supergroup          0 2023-08-16 19:37 /user/df/wordcount/input
+```
+
+7
+
+```
+hdfs dfs -put file01 file02 wordcount/input &&
+hdfs dfs -ls -R /user/df/wordcount
+```
+```
+drwxr-xr-x   - df supergroup          0 2023-08-16 19:39 /user/df/wordcount/input
+-rw-r--r--   1 df supergroup         22 2023-08-16 19:39 /user/df/wordcount/input/file01
+-rw-r--r--   1 df supergroup         28 2023-08-16 19:39 /user/df/wordcount/input/file02
+```
+
+8
+
+```
+hdfs dfs -cat wordcount/input/{file01,file02}
+```
+```
+Hello World Bye World
+Hello Hadoop Goodbye Hadoop
+```
+
+9
+
+```
+hadoop jar wc.jar WordCount wordcount/input wordcount/output
+```
+
+10
+
+```
+hdfs dfs -cat wordcount/output/part-r-00000
+```
+```
+Bye	1
+Goodbye	1
+Hadoop	2
+Hello	2
+World	2
+```
+
 ## `WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable`
 
 * https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/NativeLibraries.html
