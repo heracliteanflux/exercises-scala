@@ -1,8 +1,3 @@
-# small data solution
-# problems
-#   a large file might not fit on one's machine
-#   the counter is an associative array of key-value pairs and might not fit
-
 import sys
 
 def word_count (filename):

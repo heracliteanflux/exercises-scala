@@ -2,6 +2,21 @@
 
 ## Exercises
 
+### small data solution
+
+```python
+def word_count (filename):
+  counter = {}
+  with open(filename) as infile:
+    for line in infile:
+      words = line.split()
+      for w in words:
+        counter[w] = counter.get(w, 0) + 1
+  return counter
+```
+
+A large file might not fit on one's machine or the counter (which is an associative array of key-value pairs) might not fit.
+
 ### word counts `word_count.py`
 
 ```python
