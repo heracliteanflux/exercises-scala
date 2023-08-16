@@ -155,6 +155,11 @@ L(B+N) bytes are being shipped across the network from mappers to reducers, whic
 
 ### setup and teardown
 
+
+The setup function `mapper_init` can initialize class variables (e.g., `self.cache = {}`) which are available when the same mapper processes subsequent lines and can output key-value pairs via `yield`.
+
+The teardown function `mapper_final` can output key-value pairs and cleans up (e.g., closes open file connections).
+
 ```python
 from mrjob.job import MRJob
 
@@ -164,12 +169,21 @@ class WordCount (MRJob):
 		self.cache = {}
 
 	def mapper (self, key, line):
-		limit = 100
-		for word in line:
-			self.cache[word] += 1
-			if (len(cache) > limit):
-				for word in cache:
-			    yield word, self.cache[word]
+		words = line.split()
+		for word in words:
+			self.cache[word] = self.cache.get(word, 0) + 1
+			# if word not in self.cache:
+			# 	self.cache[word] = 0
+			# self.cache[word] += 1
+			if len(self.cache) > 100:
+				for w in self.cache:
+					yield w, self.cache[w]
+				self.cache = {}
+
+	def mapper_final (self):
+		if self.cache: # if len(self.cache) > 0
+			for w in self.cache:
+				yield w, self.cache[w]
 
 	def reducer (self, key, values):
 		yield key, sum(values)
