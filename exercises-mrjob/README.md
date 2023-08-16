@@ -187,6 +187,8 @@ python word_alpha.py war_and_peace.txt
 ## Notes
 
 mrjob
-* a convenient Python interface to Hadoop's Java code
-* slower that Java: uses Hadoop streaming interface to communicate with Java code via stdin and stdout
-* less control of useful components such as the partitioner
+* Hadoop's native language is Java
+* writing jobs in Java provides type safety, and more control over such things as the partitioner
+* mrjob is a convenient Python interface to Hadoop's Java code
+* using mrjob is slower than using Java: mrjob uses Hadoop streaming interface to communicate with the Java code via stdin and stdout
+* mrjob provides less control over some useful components like the partitioner
