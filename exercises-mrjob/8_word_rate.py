@@ -11,17 +11,24 @@ class WordRate (MRJob):
 	def mapper (self, _, line):
 		words = line.split()
 		for word in words:
-			if word not in self.cache:
-				self.cache[word] = 0
-			self.cache[word] += 1
+			self.cache[word] = self.cache.get(word, 0) + 1
 			self.total += 1
+			# flush the cache
 			if len(self.cache) > 100:
 				for w in self.cache:
 					yield w, self.cache[w]
 				self.cache = {}
 
 	def mapper_final (self):
-		yield '_Total', self.total
+
+		if self.cache: # if len(self.cache) > 0
+			for w in self.cache:
+				yield w, self.cache[w]
+			self.cache = {}
+
+		if self.total: # if self.total > 0
+			yield '_Total', self.total
+			self.total = 0
 
 	def reducer_init (self):
 		self.cache = {}
@@ -29,13 +36,13 @@ class WordRate (MRJob):
 
 	def reducer (self, key, values):
 		if key == '_Total':
-			self.total += values
+			self.total += sum(values)
 		else:
-			self.cache[key] = values
+			self.cache[key] = self.cache.get(key, 0) + sum(values)
 
 	def reducer_final (self):
 		for word in self.cache:
-			yield word, sum(self.cache[word]) / self.total
+			yield word, self.cache[word] / self.total
 
 if __name__ == '__main__':
 	WordRate.run()
