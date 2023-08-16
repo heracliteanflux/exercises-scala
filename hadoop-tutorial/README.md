@@ -1,4 +1,4 @@
-# Hadoop: Setting up a Single Node Cluster on macOS
+# Setting up a single node cluster on macOS
 
 https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html
 
@@ -192,6 +192,31 @@ hdfs dfs -cat output/*
 ```
 hdfs --daemon stop namenode &&
 hdfs --daemon stop datanode
+```
+
+### `WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable`
+
+* https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/NativeLibraries.html
+* https://cwiki.apache.org/confluence/display/HADOOP/Develop+on+Apple+Silicon+%28M1%29+macOS
+
+```
+hadoop checknative -a
+```
+```
+2023-08-16 00:35:27,962 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Native library checking:
+hadoop:  false
+zlib:    false
+zstd  :  false
+bzip2:   false
+openssl: false
+ISA-L:   false
+PMDK:    false
+2023-08-16 00:35:28,000 INFO util.ExitUtil: Exiting with status 1: ExitException
+```
+
+```
+ mvn package -Pdist,native -DskipTests -Dtar -Dmaven.javadoc.skip=true
 ```
 
 TO REVIEW

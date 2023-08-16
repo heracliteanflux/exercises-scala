@@ -1,3 +1,5 @@
+# https://mrjob.readthedocs.io/en/latest/guides/quickstart.html
+
 from mrjob.job  import MRJob
 from mrjob.step import MRStep
 

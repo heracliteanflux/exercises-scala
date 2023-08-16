@@ -3,6 +3,8 @@
 #   a large file might not fit on one's machine
 #   the counter is an associative array of key-value pairs and might not fit
 
+import sys
+
 def word_count (filename):
   counter = {}
   with open(filename) as infile:
@@ -11,3 +13,5 @@ def word_count (filename):
       for w in words:
         counter[w] = counter.get(w, 0) + 1
   return counter
+
+print(word_count(sys.argv[1]))
