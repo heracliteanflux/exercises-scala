@@ -363,3 +363,11 @@ worker node failure is determined by a lack of heartbeat messages and the worker
 * mrjob is a convenient Python interface to Hadoop's Java code
 * using mrjob is slower than using Java: mrjob uses Hadoop streaming interface to communicate with the Java code via stdin and stdout
 * mrjob provides less control over some useful components like the partitioner
+
+[IN MEMORY COMBINING]
+
+* combining messages inside the mapper is called in memory combining
+* Hadoop combiners do not guarantee when/if/how-many-times a combiner will run, so in memory combining is preferred
+* don't let data stored by the mapper get too large, otherwise it will not fit in memory
+* avoid small data solutions
+* flush the cache: output key-value pairs when the cache gets too big, and then flush the cache

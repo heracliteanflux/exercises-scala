@@ -21,6 +21,7 @@ class WordCount (MRJob):
 		if self.cache: # if len(self.cache) > 0
 			for w in self.cache:
 				yield w, self.cache[w]
+			self.cache = {}
 
 	def reducer (self, key, values):
 		yield key, sum(values)

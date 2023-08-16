@@ -122,7 +122,48 @@ int getPartition (Key key, Value value, int numPart) {
 }
 ```
 
-The statistics go to the first partition and the word counts are distributed to the remaining partitions. But this code is still inefficient.
+The statistics go to the first partition and the word counts are distributed to the remaining partitions. But this code is still inefficient:
+1. The first reducer gets message ('Total_', 1) for every word in the input. This assumes that a single reducer can store something as big as the entire input. In big data programming, this will cause the job to crash.
+2. There is no in-memory combining.
+
+#### TO DO fourth attempt with in-memory combining
+
+Use one dictionary for words (which needs to be flushed) and another dictionary for summary statistics (which never grows beyond 27 keys, so there is no need to flush it except in `mapper_final`).
+
+```python
+from mrjob.job import MRJob
+
+class WordCountStats (MRJob):
+
+	def mapper_init (self):
+		self.words = {}
+		self.stats = {}
+
+	def mapper (self, key, line):
+		words = line.split()
+		for word in words:
+			self.words[word] = self.words.get(word, 0) + 1
+			if len(self.words) > 100:
+				for w in self.words:
+					yield w, self.words[w]
+				self.words = {}
+			self.stats['Total_'] = self.stats.get('Total_', 0) + 1
+			first_letter = word[0].upper()
+			self.stats[first_letter + '_'] = self.stats.get(first_letter + '_', 0) + 1
+
+	def mapper_final (self):
+		if self.words: # if len(self.words) > 0
+			for w in self.words:
+				yield w, self.words[w]
+			self.words = {}
+		self.stats = {}
+
+	def reducer (self, key, values):
+		yield key, sum(values)
+
+if __name__ == '__main__':
+	WordCountStats.run()
+```
 
 ### letter count `letter_count.py`
 
@@ -155,10 +196,11 @@ L(B+N) bytes are being shipped across the network from mappers to reducers, whic
 
 ### setup and teardown
 
-
 The setup function `mapper_init` can initialize class variables (e.g., `self.cache = {}`) which are available when the same mapper processes subsequent lines and can output key-value pairs via `yield`.
 
 The teardown function `mapper_final` can output key-value pairs and cleans up (e.g., closes open file connections).
+
+#### word count
 
 ```python
 from mrjob.job import MRJob
@@ -184,6 +226,7 @@ class WordCount (MRJob):
 		if self.cache: # if len(self.cache) > 0
 			for w in self.cache:
 				yield w, self.cache[w]
+			self.cache = {}
 
 	def reducer (self, key, values):
 		yield key, sum(values)
@@ -191,3 +234,35 @@ class WordCount (MRJob):
 if __name__ == '__main__':
 	WordCount.run()
 ```
+
+#### letter count
+
+```python
+from   mrjob.job import MRJob
+import string
+
+class LetterCount (MRJob):
+
+  def mapper_init (self):
+		# initialize a dictionary (key = letter, value = how many times the letter has been seen so far)
+    self.cache = dict.fromkeys(string.ascii_letters, 0)
+
+  def mapper (self, key, line):
+    self.set_status('heartbeat') # What would happen if the hearbeat message is not sent?
+    for symbol in line:
+      if symbol.isalpha():
+        self.cache[symbol] += 1
+
+  def mapper_final (self):
+    for key, value in self.cache.items():
+      yield key, value
+		self.cache = {}
+
+  def reducer (self, key, values):
+    yield key, sum(values)
+
+if __name__ == '__main__':
+  LetterCount.run()
+```
+
+Why should a single reducer be used here? Can a single reducer handle all messages sent to it?
