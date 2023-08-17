@@ -36,7 +36,10 @@ Python
 
 Apache Hadoop
 * Sammer, Eric. (2012). _Hadoop Operations: A Guide for Developers and Administrators_. O'Reilly. [Home](http://www.hadoopbook.com). [GitHub](https://github.com/tomwhite/hadoop-book/).
-* White, Tom. (2015). _Hadoop: The Definitive Guide: Storage and Analysis at Internet Scale_. 4th Ed. O'Reilly.
+* [[H](http://www.hadoopbook.com/)][[G1](https://github.com/tomwhite/hadoop-book/)][[G2](https://github.com/oreillymedia/hadoop_the_definitive_guide_4e)] White, Tom. (2015). _Hadoop: The Definitive Guide: Storage and Analysis at Internet Scale_. 4th Ed. O'Reilly.
+
+Apache HBase
+* [[H](http://www.hbasebook.com/)] George, Lars. _HBase: The Definitive Guide_.
 
 Apache Spark
 * Chambers, Bill & Matei Zaharia. (2018). _Spark The Definitive Guide: Big Data Processing Made Simple_. O'Reilly. [GitHub](https://github.com/databricks/Spark-The-Definitive-Guide).
@@ -88,6 +91,7 @@ Scala
 * [[W](https://en.wikipedia.org/wiki/High-availability_cluster)] High-Availability Cluster
 * [[W](https://en.wikipedia.org/wiki/Higher-order_function)] Higher-Order Function
 * [[W](https://en.wikipedia.org/wiki/Optimistic_replication)] Lazy Replication
+* [W] Line-Oriented ASCII Format
 * [[W](https://en.wikipedia.org/wiki/Map_(higher-order_function))] Map
 * [[W](https://en.wikipedia.org/wiki/Map_(parallel_pattern))] Map
 * [[W](https://en.wikipedia.org/wiki/MapReduce)] MapReduce
@@ -102,6 +106,7 @@ Scala
 * [[W](https://en.wikipedia.org/wiki/Reduction_operator)] Reduce
 * [[W](https://en.wikipedia.org/wiki/Replication_(computing))] Replication
 * [[W](https://en.wikipedia.org/wiki/System_resource)] Resource
+* [W] Sequence File
 * [[W](https://en.wikipedia.org/wiki/Shard_(database_architecture))] Shard
 * [W] Yet Another Resource Manager (YARN)
 
