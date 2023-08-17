@@ -293,5 +293,17 @@ int compare (WritableComparable w1, WritableComparable w2) {
 }
 ```
 
-```python
+### word count more frequent than "like"
+
+### joins
+
+find the total amount of purchases for each city
+* file 1 customers: key = None, value = (customer id, city)
+* file 2 orders: key = None, value = (customer id, item, amount)
+
+```sql
+select city, sum(amount)
+from customers c, orders o
+where c.id = o.id
+;
 ```
