@@ -240,3 +240,28 @@ sort \
 1950	22
 1949	111
 ```
+standalone mode
+```
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
+-input input/ncdc/sample.txt \
+-output output \
+-mapper max_temperature_map.rb \
+-reducer max_temperature_reduce.rb
+```
+cluster mode
+```
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
+-files max_temperature_map.rb,max_temperature_reduce.rb \
+-input input/ncdc/all \
+-output output \
+-mapper max_temperature_map.rb \
+-combiner max_temperature_reduce.rb \
+-reducer max_temperature_reduce.rb
+```
+```
+cat output/part-00000
+```
+```
+1901	317
+1902	244
+```
