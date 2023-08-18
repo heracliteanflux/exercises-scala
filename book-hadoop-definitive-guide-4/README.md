@@ -201,4 +201,14 @@ STDIN.each_line do |line|
 	puts "#{year}\t#{temp}" if (temp != "+9999" && q =~ /[01459]/)
 end
 ```
-
+```
+chmod 744 max_temperature_map.rb
+cat input/ncdc/sample.txt | ./max_temperature_map.rb
+```
+```
+1950	+0000
+1950	+0022
+1950	-0011
+1949	+0111
+1949	+0078
+```
