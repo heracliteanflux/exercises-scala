@@ -391,5 +391,15 @@ public class URLCat extends Object {
 }
 ```
 ```
- hadoop jar hadoop-examples.jar URLCat hdfs://localhost/user/df/quangle.txt
+ hadoop jar hadoop-examples.jar URLCat hdfs://localhost:9000/user/df/quangle.txt
+```
+or
+```
+hadoop jar hadoop-examples.jar URLCat hdfs:///user/df/quangle.txt
+```
+```
+On the top of the Crumpetty Tree
+The Quangle Wangle sat,
+But his face you could not see,
+On account of his Beaver Hat.
 ```
