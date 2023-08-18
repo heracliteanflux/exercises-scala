@@ -316,3 +316,80 @@ sort | \
 1949	111
 1950	22
 ```
+
+## Ch. 3 HDFS
+
+```
+hdfs dfs -copyFromLocal input/docs/quangle.txt quangle.txt &&
+hdfs dfs -ls
+```
+```
+Found 1 items
+-rw-r--r--   1 df supergroup        119 2023-08-18 15:31 quangle.txt
+```
+```
+hdfs dfs -copyToLocal quangle.txt quangle.copy.txt &&
+md5 input/docs/quangle.txt quangle.copy.txt
+```
+```
+MD5 (input/docs/quangle.txt) = e7891a2627cf263a079fb0f18256ffb2
+MD5 (quangle.copy.txt) = e7891a2627cf263a079fb0f18256ffb2
+```
+```
+hdfs dfs -mkdir books &&
+hdfs dfs -ls
+```
+```
+Found 2 items
+drwxr-xr-x   - df supergroup          0 2023-08-18 15:37 books
+-rw-r--r--   1 df supergroup        119 2023-08-18 15:31 quangle.txt
+```
+```
+hdfs dfs -ls file:///
+```
+```
+Found 18 items
+----------   1 root admin          0 2023-07-11 04:56 file:///.file
+drwxr-xr-x   - root wheel         64 2023-07-11 04:56 file:///.vol
+drwxrwxr-x   - root admin       4640 2023-08-18 03:43 file:///Applications
+drwxr-xr-x   - root wheel       2432 2023-07-28 12:21 file:///Library
+drwxr-xr-x   - root wheel        320 2023-07-11 04:56 file:///System
+drwxr-xr-x   - root admin        224 2023-08-15 15:46 file:///Users
+drwxr-xr-x   - root wheel         96 2023-08-15 18:40 file:///Volumes
+drwxr-xr-x   - root wheel       1248 2023-07-11 04:56 file:///bin
+drwxr-xr-x   - root wheel         64 2021-09-18 02:26 file:///cores
+dr-xr-xr-x   - root wheel       8190 2023-08-15 15:39 file:///dev
+drwxr-xr-x   - root wheel       2528 2023-08-17 17:36 file:///etc
+dr-xr-xr-x   - root wheel          1 2023-08-15 15:39 file:///home
+drwxr-xr-x   - root wheel        128 2023-05-09 10:03 file:///opt
+drwxr-xr-x   - root wheel        192 2023-08-15 15:39 file:///private
+drwxr-xr-x   - root wheel       2048 2023-07-11 04:56 file:///sbin
+drwxrwxrwt   - root wheel        512 2023-08-18 14:38 file:///tmp
+drwxr-xr-x   - root wheel        352 2023-07-11 04:56 file:///usr
+drwxr-xr-x   - root wheel       1152 2023-08-15 15:39 file:///var
+```
+```
+vim URLCat.java
+```
+```java
+import java.lang.Object;
+
+public class URLCat extends Object {
+	static {
+		URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
+	}
+	public static void main (String[] args) throws Exception {
+		InputStream in = null;
+		try {
+			in = new URL(args[0]).openStream();
+			IOUtils.copyBytes(in, System.out, 4096, false);
+		}
+		finally {
+			IOUtils.closeStream(in);
+		}
+	}
+}
+```
+```
+ hadoop jar hadoop-examples.jar URLCat hdfs://localhost/user/df/quangle.txt
+```
