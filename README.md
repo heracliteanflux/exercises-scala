@@ -108,6 +108,7 @@ Scala
 * [[W](https://en.wikipedia.org/wiki/System_resource)] Resource
 * [W] Sequence File
 * [[W](https://en.wikipedia.org/wiki/Shard_(database_architecture))] Shard
+* [[W](https://en.wikipedia.org/wiki/Standard_streams)] Standard Stream
 * [W] Yet Another Resource Manager (YARN)
 
 ## Acknowledgements
