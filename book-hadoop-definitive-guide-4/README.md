@@ -190,7 +190,7 @@ cat output/part-r-00000
 ### Hadoop Streaming
 
 ```
-vim max_temperature.rb
+vim max_temperature_map.rb
 ```
 ```rb
 #!/usr/bin/env ruby
@@ -211,4 +211,32 @@ cat input/ncdc/sample.txt | ./max_temperature_map.rb
 1950	-0011
 1949	+0111
 1949	+0078
+```
+```
+vim max_temperature_reduce.rb
+```
+```rb
+#!/usr/bin/env ruby
+
+last_key, max_val = nil, -1000000
+STDIN.each_line do |line|
+	key, val = line.split("\t")
+	if last_key && last_key != key
+		puts "#{last_key}\t#{max_val}"
+		last_key, max_val = key, val.to_i
+	else
+		last_key, max_val = key, [max_val, val.to_i].max
+	end
+end
+puts "#{last_key}\t#{max_val}" if last_key
+```
+```
+cat input/ncdc/sample.txt \
+| ./max_temperature_map.rb \
+sort \
+| ./max_temperature_reduce.rb
+```
+```
+1950	22
+1949	111
 ```
