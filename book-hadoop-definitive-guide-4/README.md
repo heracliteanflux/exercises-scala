@@ -136,5 +136,10 @@ public class MaxTemperature {
 ```
 
 ```
-hadoop jar hadoop-examples.jar MaxTemperature input/ncdc/sample.txt output
+hadoop jar hadoop-examples.jar MaxTemperature input/ncdc/sample.txt output &&
+cat output/part-r-00000
+```
+```
+1949	111
+1950	22
 ```
