@@ -189,6 +189,8 @@ cat output/part-r-00000
 
 ### Hadoop Streaming
 
+#### Ruby
+
 ```
 vim max_temperature_map.rb
 ```
@@ -264,4 +266,53 @@ cat output/part-00000
 ```
 1901	317
 1902	244
+```
+
+#### Python
+
+```
+vim max_temperature_map.py
+```
+```python
+#!/usr/bin/env python
+
+import re
+import sys
+
+for line in sys.stdin:
+	val = line.strip()
+	year, temp, q = val[15:19], val[87:92], val[92:93]
+	if temp != '+9999' and re.match('[01459]', q):
+		print(f'{year}\t{temp}')
+```
+```
+vim max_temperature_reduce.py
+```
+```python
+#!/usr/bin/env python
+
+import sys
+
+last_key, max_val = None, -sys.maxsize
+for line in sys.stdin:
+	key, val = line.strip().split('\t')
+	if last_key and last_key != key:
+		print(f'{last_key}\t{max_val}')
+		last_key, max_val = key, int(val)
+	else:
+		last_key, max_val = key, max(max_val, int(val))
+
+if last_key:
+	print(f'{last_key}\t{max_val}')
+```
+```
+chmod 744 max_temperature_map.py max_temperature_reduce.py &&
+cat input/ncdc/sample.txt | \
+./max_temperature_map.py | \
+sort | \
+./max_temperature_reduce.py
+```
+```
+1949	111
+1950	22
 ```
