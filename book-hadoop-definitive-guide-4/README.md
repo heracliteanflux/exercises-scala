@@ -508,3 +508,100 @@ Found 3 items
 drwxr-xr-x   - df supergroup          0 2023-08-18 15:37 books
 -rw-r--r--   1 df supergroup        119 2023-08-18 15:31 quangle.txt
 ```
+```
+vim ShowFileStatusTest.java
+```
+```java
+import java.lang.Object;
+
+public class ShowFileStatusTest extends Object {
+	private MiniDFSCluster cluster;
+	private FileSystem fs;
+
+	@Before
+	public void setUp () throws Exception {
+		Configuration conf = new Configuration();
+		if (System.getProperty("test.build.data") == null) {
+			System.getProperty("test.build.data", "/tmp");
+		}
+		cluster = new MiniDFSCluster.Builder(conf).build();
+		fs = cluster.getFileSystem();
+		OutputStream out = fs.create(new Path("/dir/file"));
+		out.write("content".getBytes("UTF-8"));
+		out.close();
+	}
+
+	@After
+	public void tearDown () throws IOException {
+		if (fs != null) { fs.close(); }
+		if (cluster != null) { cluster.shutdown(); }
+	}
+
+	@Test (expected = FileNotFoundException.class)
+	public void throwsFileNotFoundForNonExistentFile () throws IOException {
+		fs.getFileStatus(new Path("no-such-file"));
+	}
+
+	@Test
+	public void fileStatusForFile () throws IOException {
+		Path file = new Path("/dir/file");
+		FileStatus stat = fs.getFileStatus(file);
+		assertThat(stat.getPath().toUri().getPath(), is("/dir/file"));
+		assertThat(stat.isDirectory(), is(false));
+		assertThat(stat.getLen(), is(7L));
+		assertThat(stat.getModificationTime(), is(lessThanOrEqualTo(System.currentTimeMillis())));
+		assertThat(stat.getReplication(), is((short) 1));
+		assertThat(stat.getBlockSize(), is(128 * 1024 * 1024L));
+		assertThat(stat.getOwner(), is(System.getProperty("user.name")));
+		assertThat(stat.getGroup(), is("supergroup"));
+		assertThat(stat.getPermission().toString(), is("rw-r--r--"));
+	}
+
+	@Test
+	public void fileStatusForDirectory () throws IOException {
+		Path dir = new Path("/dir");
+		FileStatus stat = fs.getFileStatus(dir);
+		assertThat(stat.getPath().toUri().getPath(), is("/dir"));
+		assertThat(stat.isDirectory(), is(true));
+		assertThat(stat.getLen(), is(0L));
+		assertThat(stat.getModificationTime(), is(lessThanOrEqualTo(System.currentTimeMillis())));
+		assertThat(stat.getReplication(), is((short) 0));
+		assertThat(stat.getBlockSize(), is(0L));
+		assertThat(stat.getOwner(), is(System.getProperty("user.name")));
+		assertThat(stat.getGroup(), is("supergroup"));
+		assertThat(stat.getPermission().toString(), is("rwxr-xr-x"));
+	}
+}
+```
+```
+vim ListStatus.java
+```
+```java
+import java.lang.Object;
+
+public class ListStatus extends Object {
+	public static void main (String[] args) throws Exception {
+    String uri = args[0];
+		Configuration conf = new Configuration();
+		FileSystem fs = FileSystem.get(URI.create(uri), conf);
+		Path[] paths = new Path[args.length];
+		for (int i = 0; i < paths.length; i++) {
+			paths[i] = new Path(args[i]);
+		}
+		FileStatus[] status = fs.listStatus(paths);
+		Path[] listedPaths = FileUtil.stat2Paths(status);
+		for (Path p : listPaths) {
+			System.out.println(p);
+		}
+	}
+}
+```
+```
+hadoop jar hadoop-examples.jar ListStatus hdfs://localhost:9000/ hdfs://localhost:9000/user/df
+```
+```
+hdfs://localhost:9000/user
+hdfs://localhost:9000/user/df/1400-8.txt
+hdfs://localhost:9000/user/df/books
+hdfs://localhost:9000/user/df/quangle.txt
+```
