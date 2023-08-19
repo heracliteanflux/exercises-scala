@@ -16,6 +16,9 @@ Exercises in the Scala programming language with an emphasis on big data program
 * [[D](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html)] HDFS shell
 * https://www.databricks.com/glossary/hadoop-distributed-file-system-hdfs
 
+Apache Maven
+* [[P](https://repo.maven.apache.org/maven2/junit/junit/)] junit
+
 [[H](https://spark.apache.org/)][[W](https://en.wikipedia.org/wiki/Apache_Spark)] Apache Spark
 
 Scala
@@ -31,6 +34,9 @@ Python
 * [[D](https://www.dask.org)] dask
 * [[D](https://mrjob.readthedocs.io/en/latest/index.html)] mrjob
 * [[D](https://docs.pytest.org/en/latest/)] pytest
+
+[[H](https://attic.apache.org/)] Apache Attic
+* [[H](https://mrunit.apache.org/)] Apache MRUnit
 
 ## Texts
 
