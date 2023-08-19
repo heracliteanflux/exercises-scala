@@ -1,8 +1,5 @@
 # Ch. 6 MapReduce
 
-`core-default.xml` default properties
-`core-site.xml` site-specific properties
-
 Running jobs from the command line via helper classes
 * `GenericOptionsParser` class - interprets common Hadoop command-line options and sets them on a `Configuration` object for the application to use them as desired.
 * `Tool` interface - running the application via the `ToolRunner` uses `GenericOptionsParser` internally.
@@ -175,8 +172,46 @@ public class ConfigurationPrinter extends Configured implements Tool {
 5
 
 ```
+export HADOOP_CLASSPATH=target/classes/ &&
 hadoop jar hadoop-examples.jar ConfigurationPrinter -conf conf/hadoop-localhost.xml | grep yarn.resourcemanager.address=
 ```
 ```
 yarn.resourcemanager.address=localhost:8032
+```
+
+Option `-D` sets the configuration property with key `color` to the value `yellow`.
+
+```
+hadoop jar hadoop-examples.jar ConfigurationPrinter -D color=yellow | grep color
+```
+```
+color=yellow
+```
+
+Options set with `-D` take priority over properties set in configuration files.
+
+The number of reducers for a MapReduce job can be set via `-D mapreduce.job.reduces=<n>`
+
+6
+
+Default settings for public properties
+```
+find $HADOOP_HOME -type f -regex '.*default.xml'
+```
+```
+$HADOOP_HOME/share/doc/hadoop/hadoop-yarn/hadoop-yarn-common/yarn-default.xml
+$HADOOP_HOME/share/doc/hadoop/hadoop-project-dist/hadoop-common/core-default.xml
+$HADOOP_HOME/share/doc/hadoop/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
+$HADOOP_HOME/share/doc/hadoop/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml
+```
+
+Site-specific settings for public properties
+```
+find $HADOOP_HOME -type f -regex '.*site.xml'
+```
+```
+$HADOOP_HOME/libexec/etc/hadoop/yarn-site.xml
+$HADOOP_HOME/libexec/etc/hadoop/hdfs-site.xml
+$HADOOP_HOME/libexec/etc/hadoop/core-site.xml
+$HADOOP_HOME/libexec/etc/hadoop/mapred-site.xml
 ```
