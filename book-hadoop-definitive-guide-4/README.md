@@ -403,3 +403,108 @@ The Quangle Wangle sat,
 But his face you could not see,
 On account of his Beaver Hat.
 ```
+```
+vim FileSystemCat.java
+```
+```java
+import java.lang.Object;
+
+public class FileSystemCat extends Object {
+	public static void main (String[] args) throws Exception {
+		String uri = args[0];
+		Configuration conf = new Configuration();
+		FileSystem fs = FileSystem.get(URI.create(uri), conf);
+		InputStream in = null;
+		try {
+			in = fs.open(new Path(uri));
+			IOUtils.copyBytes(in, System.out, 4096, false);
+		}
+		finally {
+			IOUtils.closeStream(in);
+		}
+	}
+}
+```
+```
+hadoop jar hadoop-examples.jar FileSystemCat hdfs://localhost:9000/user/df/quangle.txt
+```
+```
+On the top of the Crumpetty Tree
+The Quangle Wangle sat,
+But his face you could not see,
+On account of his Beaver Hat.
+```
+```
+vim FileSystemDoubleCat.java
+```
+```java
+import java.lang.Object;
+
+public class FileSystemDoubleCat extends Object {
+	public static void main (String[] args) throws Exception {
+    String uri = args[0];
+		Configuration conf = new Configuration();
+		FileSystem fs = FileSystem.get(URI.create(uri), conf);
+		FSDataInputStream in = null;
+		try {
+			in = fs.open(new Path(uri));
+			IOUtils.copyBytes(in, System.out, 4096, false);
+			in.seek(0);
+			IOUtils.copyBytes(in, System.out, 4096, false);
+		}
+		finally {
+			IOUtils.closeStream(in);
+		}
+	} 
+}
+```
+```
+ hadoop jar hadoop-examples.jar FileSystemDoubleCat hdfs://localhost:9000/user/df/quangle.txt
+```
+```
+On the top of the Crumpetty Tree
+The Quangle Wangle sat,
+But his face you could not see,
+On account of his Beaver Hat.
+On the top of the Crumpetty Tree
+The Quangle Wangle sat,
+But his face you could not see,
+On account of his Beaver Hat
+```
+```
+vim FileCopyWithProgress.java
+```
+```java
+import java.lang.Object;
+
+public class FileCopyWithProgress extends Object {
+	public static void main (String[] args) throws Exception {
+		String localSrc = args[0];
+		String dst      = args[1];
+		InputStream in  = new BufferedInputStream(new FileInputStream(localSrc));
+		Configuration conf = new Configuration();
+		FileSystem fs = FileSystem.get(URI.create(dst), conf);
+		OutputStream out = fs.create(new Path(dst), new Progressable() {
+			public void progress () {
+				System.out.print(".");
+			}
+		});
+		IOUtils.copyBytes(in, out, 4096, true);
+	}
+}
+```
+```
+hadoop jar hadoop-examples.jar FileCopyWithProgress input/docs/1400-8.txt hdfs://localhost:9000/user/df/1400-8.txt
+```
+```
+..................
+```
+```
+hdfs dfs -ls
+```
+```
+Found 3 items
+-rw-r--r--   1 df supergroup    1033751 2023-08-18 22:28 1400-8.txt
+drwxr-xr-x   - df supergroup          0 2023-08-18 15:37 books
+-rw-r--r--   1 df supergroup        119 2023-08-18 15:31 quangle.txt
+```
