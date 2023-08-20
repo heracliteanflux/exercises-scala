@@ -484,21 +484,6 @@ PMDK:    false
 [`hdfs fsck`](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#fsck) file system check
 * `hdfs fsck /`
 
-## to review
-
-Configuration
-* `$HADOOP_HOME/etc/hadoop/hadoop-env.sh`
-* `$HADOOP_HOME/etc/hadoop/core-site.xml`
-* `$HADOOP_HOME/etc/hadoop/hdfs-site.xml`
-* `$HADOOP_HOME/etc/hadoop/mapred-site.xml`
-* `$HADOOP_HOME/etc/hadoop/yarn-site.xml`
-
-Defaults
-* `$HADOOP_HOME/share/doc/hadoop/hadoop-project-dist/hadoop-common/core-default.xml`
-* `$HADOOP_HOME/share/doc/hadoop/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml`
-* `$HADOOP_HOME/share/doc/hadoop/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml`
-* `$HADOOP_HOME/share/doc/hadoop/hadoop-yarn/hadoop-yarn-common/yarn-default.xml`
-
 Startup
 * `hdfs --daemon start namenode`
 * `hdfs --daemon start secondarynamenode`

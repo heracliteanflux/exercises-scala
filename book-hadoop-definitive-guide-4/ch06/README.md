@@ -654,3 +654,21 @@ mvn test
 ```
 ```log
 ```
+
+```zsh
+mvn compile &&
+export HADOOP_CLASSPATH=target/classes/ &&
+echo $HADOOP_CLASSPATH
+```
+```zsh
+target/classes/
+```
+
+```zsh
+hadoop v2.MaxTemperatureDriver -conf conf/hadoop-local.xml ../input/ncdc/micro output &&
+cat output/part-r-00000
+```
+```zsh
+1949	111
+1950	22
+```
