@@ -218,3 +218,127 @@ $HADOOP_HOME/libexec/etc/hadoop/mapred-site.xml
 
 ## Writing a Unit Test with MRUnit
 
+1
+
+```
+cd ch06 &&
+mkdir -pv src/{main,test}/java/v{1..4}
+```
+```
+src
+src/main
+src/main/java
+src/main/java/v1
+src/main/java/v2
+src/main/java/v3
+src/main/java/v4
+src/test
+src/test/java
+src/test/java/v1
+src/test/java/v2
+src/test/java/v3
+src/test/java/v4
+```
+
+2
+
+```
+vim src/main/java/v1/MaxTemperatureMapper.java
+```
+```java
+package v1;
+
+import java.io.IOException;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
+
+public class MaxTemperatureMapper
+  extends Mapper<LongWritable, Text, Text, IntWritable> {
+		
+	@Override
+	public void map (LongWritable key,
+	                         Text value,
+											  Context context)
+		throws IOException, InterruptedException {
+
+		String line           = value.toString();
+		String year           = line.substring(15, 19);
+		   int airTemperature = Integer.parseInt(line.substring(87, 92));
+		context.write(new Text(year), new IntWritable(airTemperature));
+	}
+}
+```
+
+```
+vim src/test/java/v1/MaxTemperatureMapperTest.java
+```
+```java
+// pass a weather record as input to the mapper
+// and check that the output is the year and temperature reading
+
+package v1;
+
+import java.io.Exception;
+import java.lang.Object;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mrunit.mapreduce.MapDriver;
+import org.junit.*;
+
+public class MaxTemperatureMapperTest extends Object {
+
+	@Test
+	public void processesValidRecord () throws IOException, InterruptedException {
+		Text value = new Text("0043011990999991950051518004+68750+023550FM-12+0382" +
+		                              // year ^^^^
+													"99999V0203201N00261220001CN9999999N9-00111+99999999999");
+													                      // temperature ^^^^^
+		new MapDriver<LongWritable, Text, Text, IntWritable>() // configuration
+		  .withMapper(new MaxTemperatureMapper())              //   mapper
+			.withInput(new LongWritable(0), value)               //   input key and value
+			.withOutput(new Text("1950"), new IntWritable(-11))  //   expected output key and value
+			.runTest();
+	}
+
+	@Test
+	public void ignoresMissingTemperatureRecord () throws IOException, InterruptedException {
+		Text value = new Text("0043011990999991950051518004+68750+023550FM-12+0382" +
+		                              // year ^^^^
+													"99999V0203201N00261220001CN9999999N9+99991+99999999999");
+													                      // temperature ^^^^^
+																								// missing values are represented by value `+9999`
+		new MapDriver<LongWritable, Text, Text, IntWritable>() // configuration
+		  .withMapper(new MaxTemperatureMapper())              //   mapper
+			.withInput(new LongWritable(0), value)               //   input key and value
+			.runTest();
+	}
+
+}
+```
+
+3
+
+```
+ mvn compile
+ ```
+ ```log
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -----------------< com.hadoopbook:hadoop-book-mr-dev >------------------
+[INFO] Building hadoop-book-mr-dev 4.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ hadoop-book-mr-dev ---
+[INFO] skip non existing resourceDirectory .../ch06/src/main/resources
+[INFO]
+[INFO] --- compiler:3.11.0:compile (default-compile) @ hadoop-book-mr-dev ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 2 source files with javac [debug target 1.8] to target/classes
+[WARNING] bootstrap class path not set in conjunction with -source 8
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.930 s
+[INFO] Finished at: 2023-08-19T20:30:28-04:00
+[INFO] ------------------------------------------------------------------------
+```

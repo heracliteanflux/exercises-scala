@@ -1,3 +1,9 @@
+package v1;
+
+import java.io.IOException;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
+
 public class MaxTemperatureMapper
   extends Mapper<LongWritable, Text, Text, IntWritable> {
 		
