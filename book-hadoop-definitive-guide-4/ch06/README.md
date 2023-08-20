@@ -449,3 +449,254 @@ mvn test
 [INFO] Finished at: 2023-08-19T22:46:37-04:00
 [INFO] ------------------------------------------------------------------------
 ```
+
+### Version 2
+
+```zsh
+vim src/test/java/v2/NcdcRecordParser.java
+```
+```java
+package v2;
+
+import java.lang.Object;
+import org.apache.hadoop.io.Text;
+
+public class NcdcRecordParser extends Object {
+	private static final    int MISSING_TEMPERATURE = 9999;
+	private              String year;
+	private                 int airTemperature;
+	private              String quality;
+
+	public void parse (String record) {
+		year = record.substring(15, 19);
+		String airTemperatureString;
+		// remove leading plus sign as parseInt doesn't like them (pre-Java 7)
+		if (record.charAt(87) == '+') {
+      airTemperatureString = record.substring(88, 92);
+		}
+		else {
+			airTemperatureString = record.substring(87, 92);
+		}
+		airTemperature = Integer.parseInt(airTemperatureString);
+		quality        = record.substring(92, 93);
+	}
+
+	public void parse (Text record) {
+		parse(record.toString());
+	}
+
+	public boolean isValidTemperature () {
+		return airTemperature != MISSING_TEMPERATURE && quality.matches("[01459]");
+	}
+
+	public String getYear () {
+		return year;
+	}
+
+	public int getAirTemperature () {
+		return airTemperature;
+	}
+}
+```
+```zsh
+vim src/test/java/v2/MaxTemperatureMapper.java
+```
+```java
+package v2;
+
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+import v2.NcdcRecordParser;
+
+public class MaxTemperatureMapper 
+  extends Mapper<LongWritable, Text, Text, IntWritable> {
+
+	private NcdcRecordParser parser = new NcdcRecordParser();
+
+	@Override
+	public void map (LongWritable key,
+	                         Text value,
+												Context context)
+		throws IOException, InterruptedException {
+			parser.parse(value);
+			if (parser.isValidTemperature()) {
+				context.write(new Text(parser.getYear()), new IntWritable(parser.getAirTemperature()));
+			}
+		}
+}
+```
+```zsh
+vim src/test/java/v2/MaxTemperatureReducer.java
+```
+```java
+package v2;
+
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class MaxTemperatureReducer 
+  extends Reducer<Text, IntWritable, Text, IntWritable> {
+		
+	@Override
+	public void reduce (Text key,
+	   Iterable<IntWritable> values,
+		               Context context)
+	  throws IOException, InterruptedException {
+			int maxValue = Integer.MIN_VALUE;
+			for (IntWritable value : values) {
+				maxValue = Math.max(maxValue, value.get());
+			}
+			context.write(key, new IntWritable(maxValue));
+		}
+}
+```
+```zsh
+vim src/test/java/v2/MaxTemperatureMapperTest.java
+```
+```java
+// pass a weather record as input to the mapper
+// and check that the output is the year and temperature reading
+
+package v2;
+
+import java.io.IOException;
+import java.lang.Object;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mrunit.mapreduce.MapDriver;
+import org.junit.*;
+
+public class MaxTemperatureMapperTest extends Object {
+
+	@Test
+	public void processesValidRecord () throws IOException, InterruptedException {
+		Text value = new Text("0043011990999991950051518004+68750+023550FM-12+0382" +
+		                              // year ^^^^
+													"99999V0203201N00261220001CN9999999N9-00111+99999999999");
+													                      // temperature ^^^^^
+		new MapDriver<LongWritable, Text, Text, IntWritable>() // configuration
+		  .withMapper(new MaxTemperatureMapper())              //   mapper
+			.withInput(new LongWritable(0), value)               //   input key and value
+			.withOutput(new Text("1950"), new IntWritable(-11))  //   expected output key and value
+			.runTest();
+	}
+
+	@Test
+	public void processesPositiveTemperatureRecord () throws IOException, InterruptedException {
+		Text value = new Text("0043011990999991950051518004+68750+023550FM-12+0382" +
+		                              // year ^^^^
+													"99999V0203201N00261220001CN9999999N9+00111+99999999999");
+													                      // temperature ^^^^^
+		new MapDriver<LongWritable, Text, Text, IntWritable>() // configuration
+		  .withMapper(new MaxTemperatureMapper())              //   mapper
+			.withInput(new LongWritable(0), value)               //   input key and value
+			.withOutput(new Text("1950"), new IntWritable(11))   //   expected output key and value
+			.runTest();
+	}
+
+	//@Ignore
+	@Test
+	public void ignoresMissingTemperatureRecord () throws IOException, InterruptedException {
+		Text value = new Text("0043011990999991950051518004+68750+023550FM-12+0382" +
+		                              // year ^^^^
+													"99999V0203201N00261220001CN9999999N9+99991+99999999999");
+													                      // temperature ^^^^^
+																								// missing values are represented by value `+9999`
+		new MapDriver<LongWritable, Text, Text, IntWritable>() // configuration
+		  .withMapper(new MaxTemperatureMapper())              //   mapper
+			.withInput(new LongWritable(0), value)               //   input key and value
+			.runTest();
+	}
+
+	@Test
+	public void ignoresSuspectQualityRecord () throws IOException, InterruptedException {
+		Text value = new Text("0335999999433181957042302005+37950+139117SAO  +0004" +
+		                              // year ^^^^
+													"99999V0203201N00261220001CN9999999N9+00112+99999999999");
+													                      // temperature ^^^^^
+																								// suspect quality  ^
+		new MapDriver<LongWritable, Text, Text, IntWritable>() // configuration
+		  .withMapper(new MaxTemperatureMapper())              //   mapper
+			.withInput(new LongWritable(0), value)               //   input key and value
+			.runTest();
+	}
+
+}
+```
+```zsh
+vim src/test/java/v2/MaxTemperatureReducerTest.java
+```
+```java
+package v2;
+
+import java.io.IOException;
+import java.lang.Object;
+import java.util.*;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
+import org.junit.*;
+
+public class MaxTemperatureReducerTest extends Object {
+	@Test
+	public void returnsMaximumIntegerInValues () throws IOException, InterruptedException {
+		new ReduceDriver<Text, IntWritable, Text, IntWritable>()
+		  .withReducer(new MaxTemperatureReducer())
+			.withInput(new Text("1950"), Arrays.asList(new IntWritable(10), new IntWritable(5)))
+			.withOutput(new Text("1950"), new IntWritable(10))
+			.runTest();
+	}
+}
+```
+```zsh
+mvn test
+```
+```log
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -----------------< com.hadoopbook:hadoop-book-mr-dev >------------------
+[INFO] Building hadoop-book-mr-dev 4.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ hadoop-book-mr-dev ---
+[INFO] skip non existing resourceDirectory .../ch06/src/main/resources
+[INFO]
+[INFO] --- compiler:3.1:compile (default-compile) @ hadoop-book-mr-dev ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ hadoop-book-mr-dev ---
+[INFO] skip non existing resourceDirectory .../ch06/src/test/resources
+[INFO]
+[INFO] --- compiler:3.1:testCompile (default-testCompile) @ hadoop-book-mr-dev ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- surefire:3.1.2:test (default-test) @ hadoop-book-mr-dev ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junit4.JUnit4Provider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running v1.MaxTemperatureMapperTest
+[WARNING] Tests run: 3, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.628 s -- in v1.MaxTemperatureMapperTest
+[INFO] Running v1.MaxTemperatureReducerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in v1.MaxTemperatureReducerTest
+[INFO] Running v2.MaxTemperatureMapperTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s -- in v2.MaxTemperatureMapperTest
+[INFO] Running v2.MaxTemperatureReducerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in v2.MaxTemperatureReducerTest
+[INFO]
+[INFO] Results:
+[INFO]
+[WARNING] Tests run: 9, Failures: 0, Errors: 0, Skipped: 1
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.532 s
+[INFO] Finished at: 2023-08-19T23:03:35-04:00
+[INFO] ------------------------------------------------------------------------
+```

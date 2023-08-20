@@ -9,6 +9,7 @@ import v2.NcdcRecordParser;
 
 public class MaxTemperatureMapper 
   extends Mapper<LongWritable, Text, Text, IntWritable> {
+
 	private NcdcRecordParser parser = new NcdcRecordParser();
 
 	@Override
