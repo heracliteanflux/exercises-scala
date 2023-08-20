@@ -1,4 +1,4 @@
-# Ch. 6 MapReduce
+# 6 MapReduce
 
 1
 
@@ -529,30 +529,52 @@ public class MaxTemperatureMapper
 }
 ```
 ```zsh
-vim src/test/java/v2/MaxTemperatureReducer.java
+vim src/main/java/v2/MaxTemperatureDriver.java
 ```
 ```java
 package v2;
 
-import java.io.IOException;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
+import v1.MaxTemperatureReducer;
 
-public class MaxTemperatureReducer 
-  extends Reducer<Text, IntWritable, Text, IntWritable> {
-		
+public class MaxTemperatureDriver extends Configured implements Tool {
+	
 	@Override
-	public void reduce (Text key,
-	   Iterable<IntWritable> values,
-		               Context context)
-	  throws IOException, InterruptedException {
-			int maxValue = Integer.MIN_VALUE;
-			for (IntWritable value : values) {
-				maxValue = Math.max(maxValue, value.get());
-			}
-			context.write(key, new IntWritable(maxValue));
+	public int run (String[] args) throws Exception {
+		if (args.length != 2) {
+			System.err.printf("Usage: %s [generic options] <input> <output>\n", getClass().getSimpleName());
+			ToolRunner.printGenericCommandUsage(System.err);
+			return -1;
 		}
+
+		Job job = new Job(getConf(), "Max temperature");
+		job.setJarByClass(getClass());
+
+		FileInputFormat.addInputPath(job, new Path(args[0]));
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+		job.setMapperClass(MaxTemperatureMapper.class);
+		job.setCombinerClass(MaxTemperatureReducer.class);
+		job.setReducerClass(MaxTemperatureReducer.class);
+
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(IntWritable.class);
+
+		return job.waitForCompletion(true) ? 0 : 1;
+	}
+
+	public static void main (String[] args) throws Exception {
+    int exitCode = ToolRunner.run(new MaxTemperatureDriver(), args);
+		System.exit(exitCode);
+	}
 }
 ```
 ```zsh
@@ -628,75 +650,7 @@ public class MaxTemperatureMapperTest extends Object {
 }
 ```
 ```zsh
-vim src/test/java/v2/MaxTemperatureReducerTest.java
-```
-```java
-package v2;
-
-import java.io.IOException;
-import java.lang.Object;
-import java.util.*;
-import org.apache.hadoop.io.*;
-import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
-import org.junit.*;
-
-public class MaxTemperatureReducerTest extends Object {
-	@Test
-	public void returnsMaximumIntegerInValues () throws IOException, InterruptedException {
-		new ReduceDriver<Text, IntWritable, Text, IntWritable>()
-		  .withReducer(new MaxTemperatureReducer())
-			.withInput(new Text("1950"), Arrays.asList(new IntWritable(10), new IntWritable(5)))
-			.withOutput(new Text("1950"), new IntWritable(10))
-			.runTest();
-	}
-}
-```
-```zsh
 mvn test
 ```
 ```log
-[INFO] Scanning for projects...
-[INFO]
-[INFO] -----------------< com.hadoopbook:hadoop-book-mr-dev >------------------
-[INFO] Building hadoop-book-mr-dev 4.0
-[INFO]   from pom.xml
-[INFO] --------------------------------[ jar ]---------------------------------
-[INFO]
-[INFO] --- resources:3.3.1:resources (default-resources) @ hadoop-book-mr-dev ---
-[INFO] skip non existing resourceDirectory .../ch06/src/main/resources
-[INFO]
-[INFO] --- compiler:3.1:compile (default-compile) @ hadoop-book-mr-dev ---
-[INFO] Nothing to compile - all classes are up to date
-[INFO]
-[INFO] --- resources:3.3.1:testResources (default-testResources) @ hadoop-book-mr-dev ---
-[INFO] skip non existing resourceDirectory .../ch06/src/test/resources
-[INFO]
-[INFO] --- compiler:3.1:testCompile (default-testCompile) @ hadoop-book-mr-dev ---
-[INFO] Nothing to compile - all classes are up to date
-[INFO]
-[INFO] --- surefire:3.1.2:test (default-test) @ hadoop-book-mr-dev ---
-[INFO] Using auto detected provider org.apache.maven.surefire.junit4.JUnit4Provider
-[INFO]
-[INFO] -------------------------------------------------------
-[INFO]  T E S T S
-[INFO] -------------------------------------------------------
-[INFO] Running v1.MaxTemperatureMapperTest
-[WARNING] Tests run: 3, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.628 s -- in v1.MaxTemperatureMapperTest
-[INFO] Running v1.MaxTemperatureReducerTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in v1.MaxTemperatureReducerTest
-[INFO] Running v2.MaxTemperatureMapperTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s -- in v2.MaxTemperatureMapperTest
-[INFO] Running v2.MaxTemperatureReducerTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in v2.MaxTemperatureReducerTest
-[INFO]
-[INFO] Results:
-[INFO]
-[WARNING] Tests run: 9, Failures: 0, Errors: 0, Skipped: 1
-[INFO]
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.532 s
-[INFO] Finished at: 2023-08-19T23:03:35-04:00
-[INFO] ------------------------------------------------------------------------
 ```
