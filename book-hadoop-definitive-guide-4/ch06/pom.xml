@@ -21,15 +21,16 @@
 		<dependency>
 		  <groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 		  <groupId>org.apache.mrunit</groupId>
 			<artifactId>mrunit</artifactId>
 			<version>1.1.0</version>
 			<scope>test</scope>
-		</dependency> -->
+			<classifier>hadoop2</classifier>
+		</dependency>
 		<!-- Hadoop test artifact for running mini clusters -->
 		<dependency>
 		  <groupId>org.apache.hadoop</groupId>
@@ -45,16 +46,16 @@
 		  <plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
+				<version>3.1</version>
         <configuration>
-				  <source>1.8</source>
-					<target>1.8</target>
+				  <source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>2.5</version>
 				<configuration>
 				  <outputDirectory>${basedir}</outputDirectory>
 				</configuration>
