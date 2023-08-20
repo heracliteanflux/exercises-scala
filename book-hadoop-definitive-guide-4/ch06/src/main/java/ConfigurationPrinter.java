@@ -1,5 +1,7 @@
 // print the keys and values of all the properties in the `Tool`'s `Configuration` object
 
+package v1;
+
 import java.util.Map.Entry;
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.util.*;

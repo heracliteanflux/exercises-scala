@@ -215,3 +215,6 @@ $HADOOP_HOME/libexec/etc/hadoop/hdfs-site.xml
 $HADOOP_HOME/libexec/etc/hadoop/core-site.xml
 $HADOOP_HOME/libexec/etc/hadoop/mapred-site.xml
 ```
+
+## Writing a Unit Test with MRUnit
+
