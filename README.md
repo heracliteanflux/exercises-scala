@@ -38,6 +38,11 @@ Python
 [[H](https://attic.apache.org/)] Apache Attic
 * [[H](https://mrunit.apache.org/)] Apache MRUnit
 
+More
+* [Hadoop Basics](https://blog.ditullio.fr/category/hadoop-basics/)
+  * [Hadoop Basics I: Working with Sequence Files](https://blog.ditullio.fr/2015/12/18/hadoop-basics-working-with-sequence-files/)
+  * [Hadoop Basics II: Filter, Aggregate, and Sort with MapReduce](https://blog.ditullio.fr/2015/12/24/hadoop-basics-filter-aggregate-sort-mapreduce/)
+
 ## Texts
 
 Apache Hadoop
